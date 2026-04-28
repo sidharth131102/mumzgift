@@ -33,7 +33,7 @@ Full setup instructions with prerequisites: [README.md](README.md)
 
 ## 3-Minute Walkthrough
 
-**Loom:** *(paste your Loom link here after recording)*
+**Loom:** *([https://www.loom.com/share/67bc0819fcbf4f5bad4c9d390863ff87])*
 
 The walkthrough covers 5 inputs end-to-end:
 1. English happy path — budget + age → ranked results
@@ -65,7 +65,7 @@ Built entirely with **Claude Code (Claude Sonnet 4.6)** as a pair-coding partner
 | Backend — schemas, pipeline, catalog, FastAPI routes, prompts | ~2 hrs |
 | Frontend — Next.js app, all components, RTL, multi-currency | ~1.5 hrs |
 | Debugging — model availability, JSON parsing, memory limits, deployment | ~1.5 hrs |
-| Documentation — README, EVALS.md, TRADEOFFS.md, SUBMISSION.md | ~1 hr |
-| **Total** | **~7.5 hrs** |
+| Documentation — README, EVALS.md, TRADEOFFS.md, SUBMISSION.md | ~0.5 hr |
+| **Total** | **~7 hrs** |
 
 Went over the 5-hour guideline. The extra time was split between iterating on the LLM prompt (3 rounds on the intent extractor) and debugging the Render deployment (OOM from PyTorch → switched to fastembed ONNX).
