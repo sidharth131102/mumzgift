@@ -8,6 +8,47 @@ The system explicitly handles uncertainty: it asks for clarification when budget
 
 ---
 
+## Features
+
+### Natural language search
+Type a free-form description of what you're looking for — no dropdowns, no filters. The AI extracts budget, baby age, occasion, and tags from your words. Example: *"thoughtful gift for a colicky newborn, budget 150 AED"* correctly pulls `budget=150`, `age=0 months`, `tags=[soothing]`.
+
+### Voice search
+Click the microphone button and speak your query in English or Arabic. Groq Whisper large-v3 transcribes the audio server-side, auto-detects the language, and populates the transcript back into the search box so you can review and edit it before results load.
+
+### Bilingual English / Arabic
+The entire UI switches between English (LTR) and Arabic (RTL) with a single button. The language toggle is also triggered automatically when the AI detects the query language. All product names, gift recommendations, and reasoning are returned in both languages — the Arabic copy is written as native Gulf Arabic, not a structural translation of the English.
+
+### Multi-currency support (AED, USD, INR)
+State your budget in any currency — *"under $50"*, *"₹5,000 budget"*, or *"200 AED"*. The system detects the currency, normalises to AED for filtering, and displays prices back in your original currency. When browsing in USD or INR, product cards also show the AED reference price.
+
+### Intent strip
+After every search, a row of colour-coded pills shows exactly what the AI understood: budget (green), baby age (blue), occasion (purple), tags (grey), and any fields still missing (amber). A confidence percentage is shown on the right. This gives full visibility into how your query was interpreted.
+
+### Smart clarification
+When a budget is missing, the system asks a focused follow-up question rather than guessing or returning empty results. Your original query is preserved — typing a budget in the follow-up appends it and re-runs the full pipeline.
+
+### Graceful null state
+When no products match (impossible budget, out-of-scope query, wrong platform), the system returns a clear explanation instead of an empty list or a hallucinated product. Queries like *"gift for my dog"* or *"gift under 5 AED"* produce a human-readable null reason.
+
+### Ranked gift cards
+Each result card shows:
+- Product name in English and Arabic
+- Price in your chosen currency (with AED reference if applicable)
+- Age range suitability
+- AI-generated reason why this gift fits the query, in both languages
+- Match score (0–100%) with a colour-coded bar (green ≥ 80%, amber ≥ 60%, red below)
+- Tags and occasion labels
+- Expandable "Source" section showing the product description the AI was grounded in
+
+### Side-by-side product comparison
+Select 2 or 3 gift cards and click **Compare**. The system fetches the full product metadata and renders a structured comparison table with price, age range, match score, and reasoning for each product. The best-value and best-match products are highlighted with coloured badges.
+
+### Quick-fill example queries
+Five example queries (three in English, two in Arabic) are shown below the search bar. Clicking one populates the search box and triggers a search immediately — useful for trying the system without typing.
+
+---
+
 ## Setup — clone to first output in under 5 minutes
 
 ### Prerequisites
