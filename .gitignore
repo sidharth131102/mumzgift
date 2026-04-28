@@ -1,9 +1,12 @@
 # Python
 backend/venv/
-backend/__pycache__/
-backend/*.pyc
+**/__pycache__/
+**/*.pyc
 backend/.env
 *.egg-info/
+
+# TypeScript build
+frontend/tsconfig.tsbuildinfo
 
 # Node
 frontend/node_modules/
