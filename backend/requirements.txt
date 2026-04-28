@@ -1,0 +1,17 @@
+# Core — install this first
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+python-multipart==0.0.18
+httpx==0.27.2
+python-dotenv==1.0.1
+pinecone==5.4.2
+sentence-transformers==3.3.1
+openai==1.57.2
+groq==0.13.1
+
+# Voice / STT — only needed if USE_GROQ=false (local Whisper)
+# Requires ffmpeg installed on the system AND ~2 GB disk for torch.
+# Install separately:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install openai-whisper

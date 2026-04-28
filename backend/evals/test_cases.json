@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "type": "easy",
+    "input": "thoughtful gift for a 6-month-old under 200 AED",
+    "expected_status": "results",
+    "expected_behavior": "Returns 2-3 products all priced under 200 AED. Intent extracts budget=200, age=6.",
+    "must_not": "Return any product priced over 200 AED"
+  },
+  {
+    "id": 2,
+    "type": "easy",
+    "input": "educational toy for a 1-year-old",
+    "expected_status": "clarification_needed",
+    "expected_behavior": "Budget is missing. missing_info includes budget_aed. clarification_question is returned.",
+    "must_not": "Return results without knowing the budget"
+  },
+  {
+    "id": 3,
+    "type": "easy",
+    "input": "baby shower gift under 300 AED",
+    "expected_status": "results",
+    "expected_behavior": "occasion = baby shower. All results under 300 AED.",
+    "must_not": "Return products priced above 300 AED"
+  },
+  {
+    "id": 4,
+    "type": "easy",
+    "input": "something soothing for a colicky newborn, budget 150 AED",
+    "expected_status": "results",
+    "expected_behavior": "tags includes soothing. age inferred as 0. All results under 150 AED.",
+    "must_not": "Return non-soothing products"
+  },
+  {
+    "id": 5,
+    "type": "arabic",
+    "input": "هدية لطفل عمره 6 أشهر بأقل من 200 درهم",
+    "expected_status": "results",
+    "expected_behavior": "language = ar. reason_ar is native Gulf Arabic, not a structural translation of reason_en.",
+    "must_not": "Return reason_ar that mirrors reason_en word-for-word in structure"
+  },
+  {
+    "id": 6,
+    "type": "arabic",
+    "input": "هدية تعليمية للأطفال الصغار، الميزانية 250 درهم",
+    "expected_status": "results",
+    "expected_behavior": "language = ar. tags includes educational. budget = 250.",
+    "must_not": "Return products above 250 AED"
+  },
+  {
+    "id": 7,
+    "type": "adversarial",
+    "input": "gift under 5 AED",
+    "expected_status": "null",
+    "expected_behavior": "No products exist under 5 AED. Returns null with a clear explanation.",
+    "must_not": "Return any product or hallucinate a cheap product"
+  },
+  {
+    "id": 8,
+    "type": "edge",
+    "input": "gift",
+    "expected_status": "clarification_needed",
+    "expected_behavior": "missing_info = [budget_aed, baby_age_months]. clarification_question asks for both.",
+    "must_not": "Return results or guess budget/age"
+  },
+  {
+    "id": 9,
+    "type": "edge",
+    "input": "something affordable for any child",
+    "expected_status": "clarification_needed",
+    "expected_behavior": "affordable must NOT be inferred as a number. budget_aed = null. missing_info includes budget_aed.",
+    "must_not": "Infer budget_aed from the word affordable"
+  },
+  {
+    "id": 10,
+    "type": "adversarial",
+    "input": "gift for my dog",
+    "expected_status": "null",
+    "expected_behavior": "Out of scope. confidence low. Returns null with explanation that this is a baby product platform.",
+    "must_not": "Return baby products as gifts for a dog"
+  },
+  {
+    "id": 11,
+    "type": "adversarial",
+    "input": "what is the capital of France",
+    "expected_status": "null",
+    "expected_behavior": "Completely out of scope. Returns null with explanation.",
+    "must_not": "Attempt to answer or return any product"
+  },
+  {
+    "id": 12,
+    "type": "edge",
+    "input": "gift for a 6-month-old",
+    "expected_status": "clarification_needed",
+    "expected_behavior": "Age extracted but budget missing. missing_info = [budget_aed].",
+    "must_not": "Return results without a budget"
+  },
+  {
+    "id": 13,
+    "type": "adversarial",
+    "input": "I am looking for a very nice thoughtful meaningful beautiful wonderful special unique creative personalised lovely memorable heartfelt extraordinary exceptional premium deluxe superior outstanding remarkable gift for a baby who is approximately six months old and whose parents are first-time parents living in Dubai and the budget should be somewhere around maybe two hundred dirhams if possible",
+    "expected_status": "results",
+    "expected_behavior": "Long rambling query. Intent extractor still outputs valid GiftIntent. budget=200, age=6.",
+    "must_not": "Fail to parse or return a validation error"
+  },
+  {
+    "id": 14,
+    "type": "easy",
+    "input": "musical toy for toddler under 200 AED",
+    "expected_status": "results",
+    "expected_behavior": "tags includes musical. All results under 200 AED. grounded_in is non-empty on all cards.",
+    "must_not": "Return a card with empty grounded_in field"
+  },
+  {
+    "id": 15,
+    "type": "edge",
+    "input": "gift for newborn twins, budget 400 AED total",
+    "expected_status": "results",
+    "expected_behavior": "Handles edge case gracefully. budget may be interpreted as 200 per child or 400 total.",
+    "must_not": "Crash or return a 500 error"
+  }
+]
