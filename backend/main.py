@@ -23,10 +23,17 @@ logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="Mumzgift API", version="1.0.0")
 
+_frontend_url = os.getenv("FRONTEND_URL", "")
+_origins = ["http://localhost:3000"]
+if _frontend_url == "*":
+    _origins = ["*"]
+elif _frontend_url:
+    _origins.append(_frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", os.getenv("FRONTEND_URL", "")],
-    allow_credentials=True,
+    allow_origins=_origins,
+    allow_credentials=_frontend_url != "*",
     allow_methods=["*"],
     allow_headers=["*"],
 )
