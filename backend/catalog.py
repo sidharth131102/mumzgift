@@ -12,8 +12,8 @@ import time
 from pathlib import Path
 
 from dotenv import load_dotenv
+from fastembed import TextEmbedding
 from pinecone import Pinecone, ServerlessSpec
-from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
@@ -22,11 +22,11 @@ INDEX_NAME = os.environ["PINECONE_INDEX_NAME"]
 DIMENSION = 384
 PRODUCTS_PATH = Path(__file__).parent.parent / "data" / "products.json"
 
-_model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+_model = TextEmbedding("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
 
 def _embed(text: str) -> list[float]:
-    return _model.encode(text, normalize_embeddings=True).tolist()
+    return list(_model.embed([text]))[0].tolist()
 
 
 def main() -> None:

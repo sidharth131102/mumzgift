@@ -4,9 +4,9 @@ import os
 from pathlib import Path
 
 from fastapi import HTTPException
+from fastembed import TextEmbedding
 from groq import AsyncGroq
 from pinecone import Pinecone
-from sentence_transformers import SentenceTransformer
 
 from schemas import GiftCard, GiftIntent, SearchResponse
 
@@ -29,7 +29,7 @@ INDEX_NAME = os.environ["PINECONE_INDEX_NAME"]
 INTENT_PROMPT = (Path(__file__).parent.parent / "prompts" / "intent_extractor.txt").read_text(encoding="utf-8")
 RANKER_PROMPT = (Path(__file__).parent.parent / "prompts" / "ranker_system.txt").read_text(encoding="utf-8")
 
-_embed_model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+_embed_model = TextEmbedding("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 _pinecone = Pinecone(api_key=PINECONE_API_KEY)
 _index = _pinecone.Index(INDEX_NAME)
 _llm = AsyncGroq(api_key=GROQ_API_KEY)
@@ -73,7 +73,7 @@ async def extract_intent(query: str) -> GiftIntent:
 # ── Stage 2 ──────────────────────────────────────────────────────────────────
 
 def embed_query(query: str) -> list[float]:
-    return _embed_model.encode(query, normalize_embeddings=True).tolist()
+    return list(_embed_model.embed([query]))[0].tolist()
 
 
 # ── Stage 3 ──────────────────────────────────────────────────────────────────
