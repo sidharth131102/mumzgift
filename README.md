@@ -4,7 +4,7 @@ Mumzgift is a bilingual (English + Arabic) AI-powered gift recommendation system
 
 The system explicitly handles uncertainty: it asks for clarification when budget is missing, returns a null state with an explanation when no products match, and a Pydantic schema-level validator prevents the LLM from recommending products that weren't in the retrieved set.
 
-**Live stack:** Next.js 14 frontend → FastAPI backend → Pinecone vector DB → Groq Llama 3.3 70B (LLM) + Groq Whisper large-v3 (STT) + paraphrase-multilingual-MiniLM-L12-v2 (embeddings, local)
+**Live stack:** Next.js 14 frontend → FastAPI backend → Pinecone vector DB → Groq Llama 3.3 70B (LLM) + Groq Whisper large-v3 (STT) + paraphrase-multilingual-MiniLM-L12-v2 via fastembed/ONNX (embeddings)
 
 ---
 
@@ -143,9 +143,11 @@ Pinecone serverless is hosted — no local setup or persistent-volume concerns i
 
 Originally designed for Qwen2.5-72B-Instruct via OpenRouter (which produced excellent Gulf Arabic and reliable JSON). During integration, OpenRouter's free tier for all tested models (Qwen2.5, Llama 3.3, Gemma 3, DeepSeek V3) was rate-limited or unavailable under load. Switched to Groq's hosted Llama 3.3 70B, which has a generous free tier, sub-second inference, and consistent JSON output. The tradeoff: Groq's Arabic output is slightly more MSA (Modern Standard Arabic) than Gulf dialect compared to Qwen — mitigated by explicit prompting.
 
-### Why paraphrase-multilingual-MiniLM-L12-v2?
+### Why paraphrase-multilingual-MiniLM-L12-v2 via fastembed?
 
-Trained on parallel corpora across 50+ languages including Arabic. A single model handles both English and Arabic queries without query translation. 384-dimensional embeddings keep Pinecone costs minimal. Runs locally — no embedding API key or latency. The alternative (OpenAI `text-embedding-3-small`) would require a paid key and add network latency on every search.
+Trained on parallel corpora across 50+ languages including Arabic. A single model handles both English and Arabic queries without query translation. 384-dimensional embeddings keep Pinecone costs minimal. No embedding API key or network latency — runs in-process.
+
+`fastembed` is used instead of `sentence-transformers` to load the model via ONNX runtime rather than PyTorch. This cuts the in-process memory footprint from ~350MB to ~100MB, which is critical for fitting within Render's 512MB free tier. The embeddings are mathematically identical — same model weights, different runtime. The only tradeoff is a slightly slower first request on a cold start while the ONNX model is downloaded and cached.
 
 ### Why Groq Whisper large-v3 for STT?
 
@@ -270,7 +272,7 @@ python evals/evals.py
 | Claude Code (Claude Sonnet 4.6, claude.ai/code) | Architecture design, all code generation, prompt iteration, debugging |
 | Groq Llama 3.3 70B Versatile | Runtime: intent extraction and gift ranking |
 | Groq Whisper large-v3 | Runtime: hosted audio transcription with language detection |
-| paraphrase-multilingual-MiniLM-L12-v2 (HuggingFace) | Runtime: local bilingual embeddings |
+| paraphrase-multilingual-MiniLM-L12-v2 via fastembed (ONNX) | Runtime: bilingual embeddings, no PyTorch |
 | Pinecone Serverless | Runtime: vector database with metadata pre-filtering |
 
 ### How I used Claude Code
